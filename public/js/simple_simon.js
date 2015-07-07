@@ -52,6 +52,7 @@ function disableStart() {
 function simonsTurn(){
     getRandom();
     playSimonSeq();
+    yourSeq = [];
 };
 
 // listens for the start button and runs the Simon function
@@ -113,34 +114,39 @@ function enableButtons() {
         animateSquare(squareClicked);
 
         comparison();
+
         console.log("You: [" + yourSeq + "]");
         
     });
+};
+
+function check(userIndex) {
+    if (yourSeq[userIndex] !== simonSeq[userIndex]) {
+        gameOver();
+    }
+    if (yourSeq[userIndex] == simonSeq[userIndex] && userIndex !== simonSeq.length) {
+        userIndex++;
+    }
+    if (yourSeq[userIndex] == simonSeq[userIndex] && userIndex == simonSeq.length) {
+        userIndex = 0;
+        simonsTurn();
+    }
 };
 
 // compares your value to simons value
 function comparison() {
         disableStart();
         enableButtons();
-        if (yourSeq[userIndex] === simonSeq[userIndex]) {
-
-            userIndex++;
-            // simonsTurn();
-            // console.log(userIndex);
-            
-        } else {
-            gameOver();
-        }
+        check(userIndex);
 
 };
 
 // game over behavior
 function gameOver(){
     alert('Game Over')
-    enableStart();
-    game();
     simonSeq = [];
     yourSeq =[];
+    game();
 }
 
 // game structure
