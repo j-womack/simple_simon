@@ -4,6 +4,7 @@
 var buttons = [btn1, btn2, btn3, btn4];
 var simonSeq = [];
 var yourSeq = [];
+var userIndex = 0;
 
 // animation function
 function animateSquare(square){
@@ -11,13 +12,13 @@ function animateSquare(square){
         opacity: 0.25,
         top: "+=5",
         left: "+=5"
-    }, 200);
+    }, 300);
     $(square).animate({
         opacity: 1,
         top: "-=5",
         left: "-=5",
         "box-shadow": 0
-    }, 200);
+    }, 300);
 };
 
 // running the randomized sequence
@@ -29,8 +30,8 @@ function playSimonSeq() {
         }
         animateSquare(buttons[simonSeq[i]]);
         i++
-    }, 500); 
-    yourSeq = []; 
+    }, 600); 
+    // yourSeq = []; 
     $('.round').html('Round: ' + simonSeq.length);
 };
 
@@ -47,36 +48,51 @@ function disableStart() {
     $('#start').off('click');
 };
 
+// adds a new value to the simon array
+function simonsTurn(){
+    getRandom();
+    playSimonSeq();
+};
+
 // listens for the start button and runs the Simon function
-function enableStart() {
+function clickStart() {
     $('#start').click(function(){
-
-        //      MOCKUP
-        // off();
-        // setTimeout(enable, simonSeq.length
-
-
-        //      NOTES
-        // $(this).off('click');
-        // setTimeout(function(){
-        //     $(this).on('click', function(){
-        //     });
-        // }, (simonSeq.length * 1000 + 1));
-
-        getRandom();
-        playSimonSeq();
+        enableStart();
     });  
 };
 
+// initial start button functionality
+function enableStart() {
+    buttonBlackout();
+    getRandom();
+    playSimonSeq();
+    disableStart();
+}
+
+// disables 4 buttons
 function disableButtons() {
     $('.button').off('click');
 };
 
+// disables all buttons while animating
+function buttonBlackout() {
+        //      MOCKUP
+        // off();
+        // setTimeout(enable, simonSeq.length
+    disableStart();
+    disableButtons();
+    
+    setTimeout(clickStart, (simonSeq.length * 1000 + 1));
+    setTimeout(enableButtons, (simonSeq.length * 1000 + 1));
+};
+
+// enables color buttons and pushs to your array
 function enableButtons() {
     // listens for user clicks on the buttons
     $('.button').click(function(e) {
         var squareClicked = $(this);
-        var buttonPosition
+        var buttonPosition;
+        var userIndex;
         switch (squareClicked.context.id) {
             case "btn1":
                 buttonPosition = 0;
@@ -91,11 +107,51 @@ function enableButtons() {
                 buttonPosition = 3;
                 break;
         }
+
+
         yourSeq.push(buttonPosition);
         animateSquare(squareClicked);
+
+        comparison();
         console.log("You: [" + yourSeq + "]");
+        
     });
 };
 
-enableStart();
-enableButtons();
+// compares your value to simons value
+function comparison() {
+        disableStart();
+        enableButtons();
+        if (yourSeq[userIndex] === simonSeq[userIndex]) {
+
+            userIndex++;
+            // simonsTurn();
+            // console.log(userIndex);
+            
+        } else {
+            gameOver();
+        }
+
+};
+
+// game over behavior
+function gameOver(){
+    alert('Game Over')
+    enableStart();
+    game();
+    simonSeq = [];
+    yourSeq =[];
+}
+
+// game structure
+function game() {
+    
+    disableButtons();
+
+    clickStart();
+    // comparison();
+    
+}; 
+
+game();
+
