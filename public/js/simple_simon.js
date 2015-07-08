@@ -5,6 +5,7 @@ var buttons = [btn1, btn2, btn3, btn4];
 var simonSeq = [];
 var yourSeq = [];
 var userIndex = 0;
+var buttonPosition;
 
 // animation function
 function animateSquare(square){
@@ -52,7 +53,8 @@ function disableStart() {
 function simonsTurn(){
     getRandom();
     playSimonSeq();
-    yourSeq = [];
+    enableButtons();
+    // yourSeq = [];
 };
 
 // listens for the start button and runs the Simon function
@@ -65,9 +67,9 @@ function clickStart() {
 // initial start button functionality
 function enableStart() {
     buttonBlackout();
-    getRandom();
-    playSimonSeq();
     disableStart();
+    simonsTurn();
+
 }
 
 // disables 4 buttons
@@ -88,13 +90,16 @@ function buttonBlackout() {
 };
 
 // enables color buttons and pushs to your array
-function enableButtons() {
     // listens for user clicks on the buttons
-    $('.button').click(function(e) {
+
+function enableButtons() {
+    $('.button').on('click', function(){
+
         var squareClicked = $(this);
+        console.log(squareClicked.attr('id'));
         var buttonPosition;
-        var userIndex;
-        switch (squareClicked.context.id) {
+        
+        switch ($(this).attr('id')) {
             case "btn1":
                 buttonPosition = 0;
                 break;
@@ -108,35 +113,44 @@ function enableButtons() {
                 buttonPosition = 3;
                 break;
         }
-
-
-        yourSeq.push(buttonPosition);
+        // yourSeq.push(buttonPosition);
         animateSquare(squareClicked);
+        console.log(buttonPosition);
+        console.log(simonSeq);
+        check(buttonPosition);
 
-        comparison();
-
-        console.log("You: [" + yourSeq + "]");
-        
-    });
+        // console.log("You: [" + yourSeq + "]");
+    
+    })
 };
 
-function check(userIndex) {
-    if (yourSeq[userIndex] !== simonSeq[userIndex]) {
-        gameOver();
-    }
-    if (yourSeq[userIndex] == simonSeq[userIndex] && userIndex !== simonSeq.length) {
+
+function check(buttonPosition) {
+    userIndex = 0;
+    // if (buttonPosition !== simonSeq[userIndex]) {
+    //     console.log(simonSeq[userIndex]);
+    //     gameOver();
+    // }
+    console.log('button position' + buttonPosition);
+    console.log('simonSeq' + simonSeq[userIndex]);
+    if (buttonPosition == simonSeq[userIndex]) {
+        console.log('keep going condition')
         userIndex++;
-    }
-    if (yourSeq[userIndex] == simonSeq[userIndex] && userIndex == simonSeq.length) {
-        userIndex = 0;
-        simonsTurn();
+        if (userIndex == simonSeq.length) {
+            console.log('end of turn')
+            userIndex = 0;
+            // yourSeq = [];
+            simonsTurn();
+        }
+    } else {
+        console.log(simonSeq[userIndex]);
+        gameOver();
     }
 };
 
 // compares your value to simons value
 function comparison() {
         disableStart();
-        enableButtons();
         check(userIndex);
 
 };
