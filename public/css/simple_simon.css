@@ -3,7 +3,7 @@
     width: 500px;
     background-color: #4D5057;
 }
-#btn1 {
+.btn1 {
     position: relative;
     top: 25px;
     left: 25px;
@@ -12,7 +12,7 @@
     background-color: #20FC8F;
     box-shadow: 5px 5px 2px #888888;
 }
-#btn2 {
+.btn2 {
     position: relative;
     top: -175px;
     left: 275px;
@@ -21,7 +21,7 @@
     background-color: #FFFD98;
     box-shadow: 5px 5px 2px #888888;
 }
-#btn3 {
+.btn3 {
     position: relative;
     top: -150px;
     left: 25px;
@@ -30,7 +30,7 @@
     background-color: #85C7F2;
     box-shadow: 5px 5px 2px #888888;
 }
-#btn4 {
+.btn4 {
     position: relative;
     top: -350px;
     left: 275px;

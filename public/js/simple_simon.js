@@ -1,11 +1,124 @@
 "use strict";
 
+// (function(){
+
+//     var game = {
+
+//         buttons: $('.button'),
+//         simonSeq: [],
+//         userIndex: 0,
+//         buttonPosition: null,
+//         square: null, 
+
+//         init: function() {
+//             $('#start').click(function(){
+//                 game.buttonBlackout();
+//             }); 
+//         },
+
+//         buttonBlackout: function() {
+//             // disableStart();
+//             // disableButtons();
+            
+//             setTimeout(game.simonsTurn, (simonSeq.length * 1000 + 1));
+//             setTimeout(game.enableButtons, (simonSeq.length * 1000 + 1));
+//         }
+
+
+//     }
+
+//     game.init();
+
+// })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // declaring the buttons array and empty sequences
-var buttons = [btn1, btn2, btn3, btn4];
+var buttons = $('.button');
 var simonSeq = [];
-var yourSeq = [];
 var userIndex = 0;
 var buttonPosition;
+var square;
+
+// game structure
+function game() {
+    
+    $('#start').click(function(){
+        // simonsTurn();
+        buttonBlackout();
+    });  
+    
+}
+
+// listens for the start button and runs the Simon function
+// function clickStart() {
+    
+// };
+
+                // // initial start button functionality
+                // function enableStart() {
+                //     // disableStart();
+                //     simonsTurn();
+                // }
+
+// disables all buttons while animating
+function buttonBlackout() {
+        //      MOCKUP
+        // off();
+        // setTimeout(enable, simonSeq.length
+    disableStart();
+    disableButtons();
+    
+    setTimeout(simonsTurn, (simonSeq.length * 1000 + 1));
+    setTimeout(enableButtons, (simonSeq.length * 1000 + 1));
+};
+
+// adds a new value to the simon array
+
+function simonsTurn(){
+    playSimonSeq();
+    // enableButtons();
+};
+
+
+// selecting random numbers and pushing to simon seq 
+// and animating simon sequence
+function playSimonSeq() {
+    var decision = Math.floor((Math.random() * 4));
+    simonSeq.push(decision);
+    console.log("Simon: [" + simonSeq + "]");
+    var i=0;
+    var intervalId = setInterval(function() {
+        if(i>=simonSeq.length){
+            clearInterval(intervalId);
+        }
+        console.log(buttons[simonSeq[i]]);
+        animateSquare(buttons[simonSeq[i]]);
+        i++
+    }, 600); 
+
+    $('.round').html('Round: ' + simonSeq.length);
+};
 
 // animation function
 function animateSquare(square){
@@ -22,111 +135,28 @@ function animateSquare(square){
     }, 300);
 };
 
-// running the randomized sequence
-function playSimonSeq() {
-    var i=0;
-    var intervalId = setInterval(function() {
-        if(i>=simonSeq.length){
-            clearInterval(intervalId);
-        }
-        animateSquare(buttons[simonSeq[i]]);
-        i++
-    }, 600); 
-    // yourSeq = []; 
-    $('.round').html('Round: ' + simonSeq.length);
-};
-
-// selecting random numbers and pushing to simon seq
-function getRandom() {
-    var decision = Math.floor((Math.random() * 4));
-
-    simonSeq.push(decision);
-    console.log("Simon: [" + simonSeq + "]");
-};
-
-// disables start button
-function disableStart() {
-    $('#start').off('click');
-};
-
-// adds a new value to the simon array
-function simonsTurn(){
-    getRandom();
-    playSimonSeq();
-    enableButtons();
-    // yourSeq = [];
-};
-
-// listens for the start button and runs the Simon function
-function clickStart() {
-    $('#start').click(function(){
-        enableStart();
-    });  
-};
-
-// initial start button functionality
-function enableStart() {
-    buttonBlackout();
-    disableStart();
-    simonsTurn();
-
-}
-
-// disables 4 buttons
-function disableButtons() {
-    $('.button').off('click');
-};
-
-// disables all buttons while animating
-function buttonBlackout() {
-        //      MOCKUP
-        // off();
-        // setTimeout(enable, simonSeq.length
-    disableStart();
-    disableButtons();
-    
-    setTimeout(clickStart, (simonSeq.length * 1000 + 1));
-    setTimeout(enableButtons, (simonSeq.length * 1000 + 1));
-};
-
-// enables color buttons and pushs to your array
-    // listens for user clicks on the buttons
-
+// listens for user clicks on the buttons
 function enableButtons() {
     $('.button').on('click', function(){
 
         var squareClicked = $(this);
         console.log(squareClicked.attr('id'));
-        var buttonPosition;
+        var buttonPosition = squareClicked.attr('id');
         
-        switch ($(this).attr('id')) {
-            case "btn1":
-                buttonPosition = 0;
-                break;
-            case "btn2":
-                buttonPosition = 1;
-                break;
-            case "btn3":
-                buttonPosition = 2;
-                break;
-            case "btn4":
-                buttonPosition = 3;
-                break;
-        }
-        // yourSeq.push(buttonPosition);
         animateSquare(squareClicked);
         console.log(buttonPosition);
         console.log(simonSeq);
-        check(buttonPosition);
-
-        // console.log("You: [" + yourSeq + "]");
+        if(check(buttonPosition)) {
+            simonsTurn();
+        }
     
-    })
+    });
 };
 
 
+// compares your value to simons value
 function check(buttonPosition) {
-    userIndex = 0;
+    // userIndex = 0;
     // if (buttonPosition !== simonSeq[userIndex]) {
     //     console.log(simonSeq[userIndex]);
     //     gameOver();
@@ -139,8 +169,8 @@ function check(buttonPosition) {
         if (userIndex == simonSeq.length) {
             console.log('end of turn')
             userIndex = 0;
-            // yourSeq = [];
-            simonsTurn();
+            // simonsTurn();
+            return true;
         }
     } else {
         console.log(simonSeq[userIndex]);
@@ -148,30 +178,30 @@ function check(buttonPosition) {
     }
 };
 
-// compares your value to simons value
-function comparison() {
-        disableStart();
-        check(userIndex);
 
-};
 
 // game over behavior
 function gameOver(){
     alert('Game Over')
     simonSeq = [];
-    yourSeq =[];
     game();
 }
 
-// game structure
-function game() {
-    
-    disableButtons();
-
-    clickStart();
-    // comparison();
-    
-}; 
 
 game();
 
+
+
+
+
+//////////////////////////////
+
+// disables start button
+function disableStart() {
+    $('#start').off('click');
+};
+
+// disables 4 buttons
+function disableButtons() {
+    $('.button').off('click');
+};
